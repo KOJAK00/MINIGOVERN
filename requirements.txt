@@ -1,0 +1,7 @@
+sqlmodel
+pydantic
+sqlalchemy
+pydantic-settings
+alembic
+pydantic[email]
+asyncpg
