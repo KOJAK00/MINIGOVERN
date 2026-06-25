@@ -5,3 +5,7 @@ pydantic-settings
 alembic
 pydantic[email]
 asyncpg
+fastapi[standard]
+passlib
+pyjwt
+redis
