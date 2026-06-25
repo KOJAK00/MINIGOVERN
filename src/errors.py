@@ -20,6 +20,15 @@ class AccountNotActive(GovernException):
 class AccessTokenRequired(GovernException):
     """User has provided a refresh token when an access token is needed"""
     pass
+
+class CategoryAlreadyExists(GovernException):
+    """Category with this name already exists"""
+    pass
+
+class CategoryNotFound(GovernException):
+    """Category with this id not found"""
+    pass
+
 def create_exception_handler(
     status_code: int, initial_detail: Any
 
@@ -85,6 +94,28 @@ def register_error_handlers(app: FastAPI):
                 "message": "Please provide a valid access token",
                 "resolution": "Please get an access token",
                 "error_code": "access_token_required",
+            },
+        ),
+    )
+
+    app.add_exception_handler(
+        CategoryAlreadyExists,
+        create_exception_handler(
+            status_code=status.HTTP_409_CONFLICT,
+            initial_detail={
+                "message": "Category with this name already exists",
+                "error_code": "category_exists",
+            },
+        ),
+    )
+
+    app.add_exception_handler(
+        CategoryNotFound,
+        create_exception_handler(
+            status_code=status.HTTP_404_NOT_FOUND,
+            initial_detail={
+                "message": "Category with this id not exists",
+                "error_code": "category_NotFound",
             },
         ),
     )

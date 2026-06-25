@@ -5,7 +5,7 @@ from sqlmodel import select
 from src.auth.utils import generate_password_hash
 
 PERMISSIONS = [
-    
+    "create.user"    
     "users.read",
     "users.update",
 

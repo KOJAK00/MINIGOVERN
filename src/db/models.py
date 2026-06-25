@@ -18,7 +18,7 @@ class RolePermission(SQLModel, table=True):
 
     role_id: int = Field(foreign_key="roles.id",primary_key=True)
     permission_id: int = Field(foreign_key="permissions.id",primary_key=True)
-    
+
 class Role(SQLModel, table=True):
     __tablename__ = "roles"
 
@@ -36,3 +36,9 @@ class Permission(SQLModel, table=True):
     description: str | None = Field(default=None,sa_column=Column(String(255)))  
     roles: list["Role"] = Relationship(back_populates="permissions",link_model=RolePermission)  
 
+class Category(SQLModel, table=True):
+    __tablename__ = "categories"
+
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(sa_column=Column(String(100),unique=True,nullable=False))
+    description: str | None = Field(default=None,sa_column=Column(String(255)))

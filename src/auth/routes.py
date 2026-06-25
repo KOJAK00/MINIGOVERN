@@ -15,7 +15,7 @@ user_service = UserService()
 async def create_user_account(
     user_data: UserCreateModel,
     current_user=Depends(PermissionChecker(
-        "categories.create"
+        "create.user"
     )),
     session: AsyncSession = Depends(get_session)
 ):
