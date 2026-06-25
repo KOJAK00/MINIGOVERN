@@ -28,6 +28,12 @@ class CategoryAlreadyExists(GovernException):
 class CategoryNotFound(GovernException):
     """Category with this id not found"""
     pass
+class InsufficientPermission(GovernException):
+    """User does not have the necessary permissions to perform an action."""
+    pass
+class DataSourceNotFound(GovernException):
+    """Category with this id not found"""
+    pass
 
 def create_exception_handler(
     status_code: int, initial_detail: Any
@@ -116,6 +122,28 @@ def register_error_handlers(app: FastAPI):
             initial_detail={
                 "message": "Category with this id not exists",
                 "error_code": "category_NotFound",
+            },
+        ),
+    )
+
+    app.add_exception_handler(
+        InsufficientPermission,
+        create_exception_handler(
+            status_code=status.HTTP_403_FORBIDDEN,
+            initial_detail={
+                "message": "You do not have enough permissions to perform this action",
+                "error_code": "insufficient_permissions",
+            },
+        ),
+    )
+
+    app.add_exception_handler(
+        DataSourceNotFound,
+        create_exception_handler(
+            status_code=status.HTTP_404_NOT_FOUND,
+            initial_detail={
+                "message": "datasource with this id not exists",
+                "error_code": "DataSource_NotFound",
             },
         ),
     )

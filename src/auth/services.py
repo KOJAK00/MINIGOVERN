@@ -7,6 +7,7 @@ from .utils import generate_password_hash,verify_password,create_access_token
 from src.errors import UserAlreadyExists,InvalidCredentials
 from .schemas import UserCreateModel,UserLoginModel
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import selectinload
 
 class UserService:
     async def get_role_id(self, role: str, session:AsyncSession):
@@ -16,7 +17,7 @@ class UserService:
         return role_name.id
     
     async def get_user_by_email(self, email: str, session: AsyncSession):
-        statement = select(User).where(User.email == email)
+        statement = select(User).options(selectinload(User.role)).where(User.email == email)
 
         result = await session.exec(statement)
 

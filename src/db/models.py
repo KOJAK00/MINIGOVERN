@@ -11,8 +11,9 @@ class User(SQLModel, table=True):
     hashed_password: str = Field(sa_column=Column(String(255),nullable=False))
     is_active: bool = Field(default=True)
     role_id: int = Field(foreign_key="roles.id")
-    role: "Role" = Relationship(back_populates="users")
 
+    role: "Role" = Relationship(back_populates="users")
+    datasources: list["DataSource"] = Relationship(back_populates="owner")
 class RolePermission(SQLModel, table=True):
     __tablename__ = "role_permissions"
 
@@ -42,3 +43,23 @@ class Category(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(sa_column=Column(String(100),unique=True,nullable=False))
     description: str | None = Field(default=None,sa_column=Column(String(255)))
+
+    datasources: list["DataSource"] = Relationship(back_populates="category")
+
+
+
+class DataSource(SQLModel, table=True):
+    __tablename__ = "data_sources"
+
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(sa_column=Column(String(100), nullable=False))
+    host: str = Field(sa_column=Column(String(255), nullable=False))
+    port: int = Field(default=3306)
+    database_name: str = Field(sa_column=Column(String(100), nullable=False))
+    username: str = Field(sa_column=Column(String(100), nullable=False))
+    encrypted_password: str = Field(sa_column=Column(String(255), nullable=False))
+    owner_id: int = Field(foreign_key="users.id")
+    category_id: int = Field(foreign_key="categories.id")
+    
+    owner: "User" = Relationship(back_populates="datasources")
+    category: "Category" = Relationship(back_populates="datasources")
