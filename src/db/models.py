@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field,Relationship
 from pydantic import EmailStr
-from sqlalchemy import Column, Integer,String, Enum as SQLEnum,DateTime
+from sqlalchemy import Column, Integer,String, Enum as SQLEnum,DateTime,Float
 from .enum import UserRole,DatasetState
 from datetime import datetime
 
@@ -104,12 +104,14 @@ class DatasetColumn(SQLModel, table=True):
     __tablename__ = "dataset_columns"
 
     id: int | None = Field(default=None, primary_key=True)
-    dataset_id: int = Field(foreign_key="datasets.id")
+    dataset_id: int = Field(foreign_key="datasets.id",ondelete="CASCADE")
     name: str = Field(sa_column=Column(String(100), nullable=False))
     data_type: str = Field(sa_column=Column(String(100), nullable=False))
     is_nullable: bool = Field(default=True)
     semantic_type: str | None = Field(default=None,sa_column=Column(String(100)))
     valid_ratio: float | None = Field(default=None)
+    row_count: int = Field(default=0,sa_column=Column(Integer,nullable=False))
+    null_ratio: float = Field(default=0,sa_column=Column(Float,nullable=False))
 
     dataset: "Dataset" = Relationship(back_populates="columns") 
 
