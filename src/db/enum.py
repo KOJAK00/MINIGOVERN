@@ -16,3 +16,14 @@ class ScanStatus(str, Enum):
     RUNNING = "running"
     COMPLETED = "completed"
     FAILED = "failed"
+
+class SemanticType(str, Enum):
+    EMAIL = "EMAIL"
+    PHONE = "PHONE"
+    COUNTRY = "COUNTRY"
+    CURRENCY = "CURRENCY"
+    DATE = "DATE"
+    UUID = "UUID"
+    PERSON_NAME = "PERSON_NAME"
+    IDENTIFIER = "IDENTIFIER"
+    UNKNOWN = "UNKNOWN"

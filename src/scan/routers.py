@@ -1,13 +1,8 @@
 import asyncio
-
 from fastapi import APIRouter, Depends
-
 from sqlmodel.ext.asyncio.session import AsyncSession
-
 from src.db.main import get_session
-
 from src.auth.permissions import PermissionChecker
-
 from .schemas import ScanJobResponse
 from .service import ScanService
 from .background import run_scan

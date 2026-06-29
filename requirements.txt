@@ -11,3 +11,4 @@ pyjwt
 redis
 cryptography
 aiomysql
+httpx
