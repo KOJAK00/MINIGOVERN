@@ -24,20 +24,16 @@ class ScanService:
             started_at=datetime.now()
         )
         session.add(scan_job)
-
         await session.commit()
         await session.refresh(scan_job)
-
         return scan_job
+        
     async def clear_old_scan(
     self,
     datasource_id: int,
     session
 ):
-        statement = delete(Dataset).where(
-            Dataset.datasource_id == datasource_id
-        )
-
+        statement = delete(Dataset).where(Dataset.datasource_id == datasource_id)
         await session.execute(statement)
 
         await session.commit()

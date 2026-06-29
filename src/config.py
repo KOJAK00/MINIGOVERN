@@ -6,7 +6,6 @@ class Settings(BaseSettings):
     JWT_ALGORITHM: str
     REDIS_URL : str = "redis://localhost:6379/0"
     ENCRYPTION_KEY : str
-    RESTCOUNTRIES_HEADER: str
 
 
     model_config = SettingsConfigDict(
