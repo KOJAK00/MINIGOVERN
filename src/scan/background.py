@@ -6,7 +6,18 @@ from .service import ScanService
 from .profiler import profile_column
 from .semantic_detector import detect_semantic_type
 from .validator import validate_countries
+from src.tags.services import TagService
+
 scan_service = ScanService()
+tags_service = TagService()
+
+AUTO_TAGS = {
+    "EMAIL": ["pii"],
+    "PHONE": ["pii"],
+    "PERSON_NAME": ["pii"],
+    "IBAN": ["sensitive"],
+    "CREDIT_CARD": ["sensitive"],
+}
 async def run_scan(scan_job_id: int):
 
     connection = None
@@ -74,6 +85,12 @@ async def run_scan(scan_job_id: int):
                         valid_ratio = await validate_countries(
                             profile["sample_values"]
                             )
+                    for tag in AUTO_TAGS.get(semantic_type, []):
+                        await tags_service.attach_tag_to_dataset(
+                            dataset.id,
+                            tag,
+                            session
+                                    )
                     dataset_column = DatasetColumn(
                         dataset_id=dataset.id,
                         name=f"{table_name}.{column[0]}",

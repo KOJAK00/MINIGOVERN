@@ -83,8 +83,8 @@ class ScanJob(SQLModel, table=True):
 class DatasetTag(SQLModel, table=True):
     __tablename__ = "dataset_tags"
 
-    dataset_id: int = Field(foreign_key="datasets.id",primary_key=True)
-    tag_id: int = Field(foreign_key="tags.id",primary_key=True)
+    dataset_id: int = Field(foreign_key="datasets.id",primary_key=True,ondelete="CASCADE")
+    tag_id: int = Field(foreign_key="tags.id",primary_key=True,ondelete="CASCADE")
 
 class Dataset(SQLModel, table=True):
     __tablename__ = "datasets"

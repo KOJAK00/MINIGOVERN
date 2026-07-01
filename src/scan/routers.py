@@ -21,14 +21,6 @@ async def scan(
         PermissionChecker("scan.run")
     ),
 ):
-
-    scan_job = await scan_service.create_scan_job(
-        datasource_id,
-        session
-    )
-
-    asyncio.create_task(
-        run_scan(scan_job.id)
-    )
-
+    scan_job = await scan_service.create_scan_job(datasource_id,session)
+    asyncio.create_task(run_scan(scan_job.id))
     return scan_job

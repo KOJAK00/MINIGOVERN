@@ -1,11 +1,11 @@
 import asyncio
 from src.db.main import async_session_maker
-from src.db.models import User,Role,Permission,RolePermission
+from src.db.models import User,Role,Permission,RolePermission,Tag
 from sqlmodel import select
 from src.auth.utils import generate_password_hash
 
 PERMISSIONS = [
-    "create.user"    
+    "create.user",    
     "users.read",
     "users.update",
 
@@ -37,6 +37,10 @@ PERMISSIONS = [
     "sensitive.unmasked",
 ]
 
+SYSTEM_TAGS = [
+    "pii",
+    "sensitive"
+]
 
 ROLE_PERMISSIONS = {
     "admin": PERMISSIONS,
@@ -150,6 +154,20 @@ async def seed_rbac():
             )
         session.add(admin)
         await session.commit()
+async def tags_seed():
+    print("SEED STARTED")
+    async with async_session_maker() as session:
+        for tag_name in SYSTEM_TAGS:
+            tag = await session.scalar(
+                select(Tag).where(Tag.name == tag_name)
+            )
+            if not tag:
+                tag=Tag(name=tag_name)
+                session.add(tag)
+
+        await session.commit()
+    print("seed ended")
 
 if __name__ == "__main__":
     asyncio.run(seed_rbac())
+    asyncio.run(tags_seed())

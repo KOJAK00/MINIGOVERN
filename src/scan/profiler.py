@@ -1,6 +1,5 @@
 from sqlalchemy import text
 
-
 async def profile_column(
     connection,
     table_name: str,
@@ -11,7 +10,6 @@ async def profile_column(
         f"SELECT COUNT(*) FROM `{table_name}`"
     )
     row_count = (await cursor.fetchone())[0]
-
     await cursor.execute(
         f"""
         SELECT COUNT(*)
@@ -21,7 +19,6 @@ async def profile_column(
     )
     null_count = (await cursor.fetchone())[0]
     
-
     await cursor.execute(
         f"""
         SELECT `{column_name}`
@@ -30,9 +27,7 @@ async def profile_column(
         LIMIT 20
         """
     )
-
     values = await cursor.fetchall()
-
     await cursor.close()
 
     if row_count == 0:
