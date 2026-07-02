@@ -1,7 +1,7 @@
 from sqlmodel import SQLModel, Field,Relationship
 from pydantic import EmailStr
 from sqlalchemy import Column, Integer,String, Enum as SQLEnum,DateTime,Float
-from .enum import UserRole,DatasetState
+from .enum import UserRole,DatasetState,AuditAction
 from datetime import datetime
 
 class User(SQLModel, table=True):
@@ -123,3 +123,13 @@ class Tag(SQLModel, table=True):
     name: str = Field(sa_column=Column(String(100), unique=True, nullable=False))
     description: str | None = Field(default=None,sa_column=Column(String(255)))
     datasets: list["Dataset"] = Relationship(back_populates="tags",link_model=DatasetTag)
+
+class AuditLog(SQLModel, table=True):
+    __tablename__ = "audit_logs"
+
+    id: int | None = Field(default=None, primary_key=True)
+    action: AuditAction = Field(sa_column=Column(SQLEnum(AuditAction), nullable=False))
+    entity_type: str = Field(sa_column=Column(String(100), nullable=False))
+    entity_id: int = Field(nullable=False)
+    user_id: int = Field(foreign_key="users.id")
+    created_at: datetime = Field(default_factory=datetime.utcnow)

@@ -4,10 +4,16 @@ from src.db.models import DataSource, ScanJob,Dataset
 from src.db.enum import ScanStatus
 from datetime import datetime
 from sqlmodel import delete
-class ScanService:
+from src.common.base_service import BaseService
+from src.db.enum import AuditAction
+
+class ScanService(BaseService):
+
     async def create_scan_job(
     self,
     datasource_id: int,
+    bg_tasks,
+    current_user,
     session: AsyncSession
 ):
         datasource = await session.get(
@@ -26,6 +32,14 @@ class ScanService:
         session.add(scan_job)
         await session.commit()
         await session.refresh(scan_job)
+        self.create_audit(
+            bg_tasks,
+            AuditAction.START_SCAN,
+            "SCAN",
+            scan_job.id,
+            current_user.id,
+            session
+        )
         return scan_job
         
     async def clear_old_scan(

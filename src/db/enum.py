@@ -27,3 +27,17 @@ class SemanticType(str, Enum):
     PERSON_NAME = "PERSON_NAME"
     IDENTIFIER = "IDENTIFIER"
     UNKNOWN = "UNKNOWN"
+
+class AuditAction(str, Enum):
+    CREATE_DATASOURCE = "create_datasource"
+    UPDATE_DATASOURCE = "update_datasource"
+    DELETE_DATASOURCE = "delete_datasource"
+
+    START_SCAN = "start_scan"
+
+    SUBMIT_DATASET = "submit_dataset"
+    APPROVE_DATASET = "approve_dataset"
+    REJECT_DATASET = "reject_dataset"
+
+    ASSIGN_TAG = "assign_tag"
+    REMOVE_TAG = "remove_tag"

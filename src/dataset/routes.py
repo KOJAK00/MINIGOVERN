@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,BackgroundTasks
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
 from .services import DatasetService
@@ -22,36 +22,39 @@ async def get_dataset(
 @dataset_router.post("/{dataset_id}/submit")
 async def submit_dataset(
     dataset_id: int,
-    _=Depends(
+    bg_tasks: BackgroundTasks,
+    current_user=Depends(
         PermissionChecker(
             "dataset.submit")
             ),
     session: AsyncSession = Depends(get_session)
 ):
-    return await dataset_service.submit_dataset(dataset_id, session)
+    return await dataset_service.submit_dataset(dataset_id, bg_tasks, current_user, session)
 
 @dataset_router.post("/{dataset_id}/approve")
 async def approve_dataset(
     dataset_id: int,
-    _=Depends(
+    bg_tasks: BackgroundTasks,
+    current_user=Depends(
         PermissionChecker(
             "dataset.approve")
             ),
     session: AsyncSession = Depends(get_session)
 ):
-    return await dataset_service.approve_dataset(dataset_id, session)
+    return await dataset_service.approve_dataset(dataset_id, bg_tasks, current_user, session)
 
 @dataset_router.post("/{dataset_id}/reject")
 async def reject_dataset(
     dataset_id: int,
     comment: RejectDatasetRequest,
-    _=Depends(
+    bg_tasks: BackgroundTasks,
+    current_user=Depends(
         PermissionChecker(
             "dataset.reject")
             ),
     session: AsyncSession = Depends(get_session)
 ):
-    return await dataset_service.reject_dataset(dataset_id, comment, session)
+    return await dataset_service.reject_dataset(dataset_id, comment, bg_tasks, current_user, session)
 
 @dataset_router.post("/{dataset_id}/draft")
 async def create_draft(

@@ -1,5 +1,5 @@
 import asyncio
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends,BackgroundTasks
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.main import get_session
 from src.auth.permissions import PermissionChecker
@@ -16,11 +16,12 @@ scan_service=ScanService()
 )
 async def scan(
     datasource_id: int,
+    bg_tasks: BackgroundTasks,
     session: AsyncSession = Depends(get_session),
     current_user=Depends(
         PermissionChecker("scan.run")
     ),
 ):
-    scan_job = await scan_service.create_scan_job(datasource_id,session)
+    scan_job = await scan_service.create_scan_job(datasource_id,bg_tasks,current_user,session)
     asyncio.create_task(run_scan(scan_job.id))
     return scan_job

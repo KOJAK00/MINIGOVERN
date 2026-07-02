@@ -6,6 +6,7 @@ from src.datasource.routes import data_router
 from src.scan.routers import scan_router
 from src.tags.routers import tag_router
 from src.dataset.routes import dataset_router
+from src.audit.routes import audit_router
 
 version = 'v1'
 version_prefix =f"/api/{version}"
@@ -22,3 +23,4 @@ app.include_router(data_router,prefix=f"{version_prefix}/datasource", tags= ['da
 app.include_router(scan_router,prefix=f"{version_prefix}/scan" , tags=['scan'])
 app.include_router(tag_router,prefix=f"{version_prefix}/tags" , tags=['tags'])
 app.include_router(dataset_router,prefix=f"{version_prefix}/dataset" , tags=['datasets'])
+app.include_router(audit_router,prefix=f"{version_prefix}/audit" , tags=['audit'])

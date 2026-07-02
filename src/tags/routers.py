@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status,BackgroundTasks
 from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.main import get_session
 from .schemas import *
@@ -72,27 +72,29 @@ async def delete_tag(
 async def assign_tag(
     dataset_id: int,
     tag_id: int,
-    _ = Depends(
+    bg_tasks: BackgroundTasks,
+    current_user = Depends(
         PermissionChecker(
             "tags.update"
         )
     ),
     session: AsyncSession = Depends(get_session)
 ):
-    return await tag_service.assign_tag_to_dataset(dataset_id,tag_id,session)
+    return await tag_service.assign_tag_to_dataset(dataset_id,tag_id,bg_tasks,current_user,session)
 
 @tag_router.delete("/datasets/{dataset_id}/tags/{tag_id}")
 async def remove_tag(
     dataset_id: int,
     tag_id: int,
-    _ = Depends(
+    bg_tasks: BackgroundTasks,
+    current_user = Depends(
         PermissionChecker(
             "tags.delete"
         )
     ),
     session: AsyncSession = Depends(get_session)
 ):
-    return await tag_service.remove_tag_from_dataset(dataset_id,tag_id,session)
+    return await tag_service.remove_tag_from_dataset(dataset_id,tag_id,bg_tasks,current_user,session)
 
 @tag_router.get("/dataset/filter")
 async def filter_by_tag(

@@ -1,4 +1,4 @@
-from fastapi import APIRouter,Depends
+from fastapi import APIRouter,Depends,BackgroundTasks
 from .schemas import DataSourceCreate,DataSourceResponse,DataSourceUpdate
 from .service import DataService
 from src.db.main import get_session
@@ -10,6 +10,7 @@ data_service = DataService()
 @data_router.post("/",response_model=DataSourceResponse)
 async def create_datasource_route(
     data: DataSourceCreate,
+    bg_tasks: BackgroundTasks,
     current_user=Depends(
         PermissionChecker(
             "datasources.create"
@@ -17,7 +18,7 @@ async def create_datasource_route(
     ),
     session:AsyncSession=Depends(get_session)
 ):
-    return await data_service.create_datasource(data,current_user,session)
+    return await data_service.create_datasource(data,bg_tasks,current_user,session)
 
 @data_router.get("/",response_model=list[DataSourceResponse])
 async def get_datasources_route(
@@ -50,19 +51,21 @@ async def get_datasource_route(
 async def update_datasource(
     datasource_id: int,
     data: DataSourceUpdate,
+    bg_tasks: BackgroundTasks,
     current_user= Depends(
         PermissionChecker("datasources.update")
     ),
     session :AsyncSession = Depends(get_session)
 ):
-    return await data_service.update_datasource(datasource_id,data,current_user,session)
+    return await data_service.update_datasource(datasource_id,data,bg_tasks,current_user,session)
 
 @data_router.delete("/{datasource_id}")
 async def update_datasource(
     datasource_id: int,
+    bg_tasks: BackgroundTasks,
     current_user= Depends(
         PermissionChecker("datasources.delete")
     ),
     session :AsyncSession = Depends(get_session)
 ):
-    return await data_service.delete_datasource(datasource_id,current_user,session)
+    return await data_service.delete_datasource(datasource_id,bg_tasks,current_user,session)

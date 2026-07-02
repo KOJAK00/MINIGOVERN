@@ -3,10 +3,14 @@ from .schemas import DataSourceCreate,DataSourceUpdate
 from src.db.models import DataSource, Category
 from src.errors import CategoryNotFound,DataSourceNotFound,InsufficientPermission
 from src.common.encryption import encrypt_password
-class DataService():
+from src.db.enum import AuditAction
+from src.common.base_service import BaseService
+
+class DataService(BaseService):
     async def create_datasource(
     self,
     data: DataSourceCreate,
+    bg_tasks,
     current_user,
     session
 ):
@@ -35,7 +39,14 @@ class DataService():
 
         await session.commit()
         await session.refresh(datasource)
-
+        self.create_audit(
+            bg_tasks,
+            AuditAction.CREATE_DATASOURCE,
+            "DATASOURCE",
+            datasource.id,
+            current_user.id,
+            session
+        )
         return datasource
     
     async def get_datasources(
@@ -83,6 +94,7 @@ class DataService():
     self,
     datasource_id: int,
     data:DataSourceUpdate,
+    bg_tasks,
     current_user,
     session
 ):
@@ -113,12 +125,20 @@ class DataService():
 
         await session.commit()
         await session.refresh(datasource)
-
+        self.create_audit(
+            bg_tasks,
+            AuditAction.UPDATE_DATASOURCE,
+            "DATASOURCE",
+            datasource.id,
+            current_user.id,
+            session
+        )
         return datasource
     
     async def delete_datasource(
     self,
     datasource_id: int,
+    bg_tasks,
     current_user,
     session
 ):
@@ -138,6 +158,14 @@ class DataService():
         await session.delete(datasource)
 
         await session.commit()
+        self.create_audit(
+            bg_tasks,
+            AuditAction.DELETE_DATASOURCE,
+            "DATASOURCE",
+            datasource.id,
+            current_user.id,
+            session
+        )
 
         return {
             "message": "Data_Source deleted"

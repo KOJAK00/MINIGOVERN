@@ -3,8 +3,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.db.models import Tag, DatasetTag,Dataset
 from .schemas import TagCreate,TagUpdate
 from fastapi import HTTPException
+from src.common.base_service import BaseService
+from src.db.enum import AuditAction
 
-class TagService:
+class TagService(BaseService):
     async def get_tag_by_name(
         self,
         name: str,
@@ -125,6 +127,8 @@ class TagService:
     self,
     dataset_id: int,
     tag_id: int,
+    bg_tasks,
+    current_user,
     session: AsyncSession
 ):
         dataset = await session.get(Dataset, dataset_id)
@@ -160,12 +164,22 @@ class TagService:
             )
         )
         await session.commit()
+        self.create_audit(
+            bg_tasks,
+            AuditAction.ASSIGN_TAG,
+            "TAG",
+            tag_id,
+            current_user.id,
+            session
+        )
         return {"message": "Tag assigned successfully"}
     
     async def remove_tag_from_dataset(
     self,
     dataset_id: int,
     tag_id: int,
+    bg_tasks,
+    current_user,
     session: AsyncSession
 ):
         relation = await session.scalar(
@@ -182,6 +196,14 @@ class TagService:
         
         await session.delete(relation)
         await session.commit()
+        self.create_audit(
+            bg_tasks,
+            AuditAction.REMOVE_TAG,
+            "TAG",
+            tag_id,
+            current_user.id,
+            session
+        )
         return {"message": "Tag removed successfully"}
     
     async def get_datasets_by_tag(
