@@ -12,3 +12,4 @@ redis
 cryptography
 aiomysql
 httpx
+bcrypt==4.3.0

@@ -94,6 +94,7 @@ class Dataset(SQLModel, table=True):
     datasource_id: int = Field(foreign_key="data_sources.id")
     scan_job_id: int = Field(foreign_key="scan_jobs.id")
     state: DatasetState = Field(sa_type=SQLEnum(DatasetState),default=DatasetState.DRAFT,nullable=False)
+    rejection_comment: str | None = Field(default=None,sa_column=Column(String(500)))
 
     datasource: "DataSource" = Relationship(back_populates="datasets")
     scan_job: "ScanJob" = Relationship(back_populates="datasets")
