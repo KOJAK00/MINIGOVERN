@@ -26,6 +26,10 @@ NAME_RULES = {
     "name": SemanticType.PERSON_NAME,
     "first_name": SemanticType.PERSON_NAME,
     "last_name": SemanticType.PERSON_NAME,
+
+    "password": SemanticType.PASSWORD,
+    "pass": SemanticType.PASSWORD,
+    "hashed_password": SemanticType.PASSWORD,
 }
 
 EMAIL_REGEX = re.compile(

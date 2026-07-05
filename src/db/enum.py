@@ -25,6 +25,7 @@ class SemanticType(str, Enum):
     DATE = "DATE"
     UUID = "UUID"
     PERSON_NAME = "PERSON_NAME"
+    PASSWORD = "PASSWORD"
     IDENTIFIER = "IDENTIFIER"
     UNKNOWN = "UNKNOWN"
 

@@ -7,6 +7,7 @@ from src.scan.routers import scan_router
 from src.tags.routers import tag_router
 from src.dataset.routes import dataset_router
 from src.audit.routes import audit_router
+from src.masking.routes import masking_router
 
 version = 'v1'
 version_prefix =f"/api/{version}"
@@ -24,3 +25,4 @@ app.include_router(scan_router,prefix=f"{version_prefix}/scan" , tags=['scan'])
 app.include_router(tag_router,prefix=f"{version_prefix}/tags" , tags=['tags'])
 app.include_router(dataset_router,prefix=f"{version_prefix}/dataset" , tags=['datasets'])
 app.include_router(audit_router,prefix=f"{version_prefix}/audit" , tags=['audit'])
+app.include_router(masking_router,prefix=f"{version_prefix}/masking", tags=['masking'])
