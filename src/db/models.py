@@ -71,7 +71,7 @@ class ScanJob(SQLModel, table=True):
     __tablename__ = "scan_jobs"
 
     id: int | None = Field(default=None, primary_key=True)
-    datasource_id: int = Field(foreign_key="data_sources.id")
+    datasource_id: int = Field(foreign_key="data_sources.id",ondelete="CASCADE")
     status: str = Field(sa_column=Column(String(20), nullable=False, default="pending"))
     started_at: datetime | None = Field(default=None,sa_column=Column(DateTime))
     finished_at: datetime | None = Field(default=None,sa_column=Column(DateTime))

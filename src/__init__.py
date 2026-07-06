@@ -8,6 +8,8 @@ from src.tags.routers import tag_router
 from src.dataset.routes import dataset_router
 from src.audit.routes import audit_router
 from src.masking.routes import masking_router
+from fastapi.middleware.cors import CORSMiddleware
+
 
 version = 'v1'
 version_prefix =f"/api/{version}"
@@ -15,6 +17,17 @@ app = FastAPI(
     title='Mini Govern',
     description='',
     version=version
+)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5500",
+        "http://127.0.0.1:5500",
+        "http://0.0.0.0:5500",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 register_error_handlers(app)

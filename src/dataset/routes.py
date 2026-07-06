@@ -8,6 +8,16 @@ from src.auth.permissions import PermissionChecker
 dataset_router = APIRouter()
 dataset_service = DatasetService()
 
+@dataset_router.get("/")
+async def get_datasets(
+    _=Depends(
+        PermissionChecker(
+            "dataset.read")
+            ),
+    session: AsyncSession = Depends(get_session)
+):
+    return await dataset_service.get_datasets(session)
+
 @dataset_router.get("/{dataset_id}")
 async def get_dataset(
     dataset_id: int,

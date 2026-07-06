@@ -60,7 +60,7 @@ async def update_datasource(
     return await data_service.update_datasource(datasource_id,data,bg_tasks,current_user,session)
 
 @data_router.delete("/{datasource_id}")
-async def update_datasource(
+async def delete_datasource(
     datasource_id: int,
     bg_tasks: BackgroundTasks,
     current_user= Depends(

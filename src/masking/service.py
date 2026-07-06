@@ -21,7 +21,6 @@ class MaskingService:
                 status_code=404,
                 detail=f"Dataset with id {dataset_id} not found"
             )
-
         datasource = await session.get(
             DataSource,
             dataset.datasource_id

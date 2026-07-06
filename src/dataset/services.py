@@ -5,8 +5,17 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from src.dataset.schemas import RejectDatasetRequest
 from src.common.base_service import BaseService
 from src.db.enum import AuditAction
+from sqlmodel import select
 
 class DatasetService(BaseService):
+    async def get_datasets(
+        self,
+        session: AsyncSession
+    ):
+        datasets = await session.exec(
+            select(Dataset)
+        )
+        return datasets.all()
     async def submit_dataset(
         self,
         dataset_id: int,

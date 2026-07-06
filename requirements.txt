@@ -13,3 +13,4 @@ cryptography
 aiomysql
 httpx
 bcrypt==4.0.1
+jinja2
